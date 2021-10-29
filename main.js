@@ -3,31 +3,51 @@
 // Setup Canvas and Graphics Context
 let cnv = document.getElementById("myCanvas");
 let ctx = cnv.getContext("2d");
-cnv.width = 600;
-cnv.height = 400;
+cnv.width = 800;
+cnv.height = 600;
 
 // Global Variables
 let mouseIsPressed = false;
-let mouseX, mouseY;
+let mouseX, mouseY, pmouseX, pmouseY;
 let size = 5;
 let penColor = "black";
 
 // Main Program Loop (60 FPS)
 requestAnimationFrame(loop);
 function loop() {
-    // Update Variables
-
-
-
     // Draw a circle if mouse is pressed
     if (mouseIsPressed) {
-        ctx.fillStyle = penColor;
+        ctx.strokeStyle = penColor;
+        ctx.lineWidth = size
         ctx.beginPath();
-        ctx.arc(mouseX, mouseY, size, 0, 2 * Math.PI)
-        ctx.fill();
+        ctx.moveTo(pmouseX, pmouseY);
+        ctx.lineTo(mouseX, mouseY);
+        ctx.stroke();
     }
 
     requestAnimationFrame(loop)
+}
+
+// Color events
+document.getElementById("redBtn").addEventListener("click", setRed);
+document.getElementById("greenBtn").addEventListener("click", setGreen);
+document.getElementById("blueBtn").addEventListener("click", setBlue);
+document.getElementById("colorPicker").addEventListener("change", changeColor);
+
+function setRed() {
+    penColor = "red";
+}
+
+function setGreen() {
+    penColor = "green";
+}
+
+function setBlue() {
+    penColor = "blue";
+}
+
+function changeColor() {
+    penColor = document.getElementById("colorPicker").value;
 }
 
 // Document Event Stuff
@@ -45,14 +65,18 @@ function mouseupHandler() {
 }
 
 function mousemoveHandler(event) {
+    // Save previous mouse x and y
+    pmouseX = mouseX;
+    pmouseY = mouseY;
+
     let cnvRect = cnv.getBoundingClientRect();
     mouseX = event.x - cnvRect.x;
     mouseY = event.y - cnvRect.y;
 }
 
-function keydownHandler(event) {
-    console.log(event.code);
 
+
+function keydownHandler(event) {
     if (event.code == "Space") {
         // Draw a background
         ctx.fillStyle = "white";
@@ -64,22 +88,11 @@ function keydownHandler(event) {
         if (size < 1) {
             size = 1
         }
-    }
-
-    // Button events
-    document.getElementById("redBtn").addEventListener("click", setRed);
-    document.getElementById("greenBtn").addEventListener("click", setGreen);
-    document.getElementById("blueBtn").addEventListener("click", setBlue);
-
-    function setRed() {
+    } else if (event.code == "Digit1") {
         penColor = "red";
-    }
-
-    function setGreen() {
+    } else if (event.code == "Digit2") {
         penColor = "green";
-    }
-
-    function setBlue() {
+    } else if (event.code == "Digit3") {
         penColor = "blue";
-}
     }
+}
