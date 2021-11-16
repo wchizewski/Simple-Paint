@@ -1,1 +1,1 @@
-# animation-basics
+# simple-paint
